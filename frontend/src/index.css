@@ -1,1 +1,79 @@
 @import "tailwindcss";
+
+body {
+    width: 100%;
+    overflow-x: hidden;
+    font-family: Arial, Helvetica, sans-serif;
+
+    &::-webkit-scrollbar {
+        width: 0px;
+    }
+}
+
+/* Base container styles (mobile-first approach) */
+.container {
+    @apply w-full max-w-full my-0 mx-auto px-5 py-4;
+}
+
+/* Small devices (sm) - >= 640px */
+@media (min-width: 640px) {
+    .container {
+        @apply px-6 py-6 max-w-[640px];
+    }
+}
+
+/* Medium devices (md) - >= 768px */
+@media (min-width: 768px) {
+    .container {
+        @apply px-8 py-8 max-w-[768px];
+    }
+}
+
+/* Large devices (lg) - >= 1024px */
+@media (min-width: 1024px) {
+    .container {
+        @apply px-10 py-10 max-w-[1024px];
+    }
+}
+
+/* Extra-large devices (xl) - >= 1280px */
+@media (min-width: 1280px) {
+    .container {
+        @apply px-16 py-16 max-w-[1280px];
+    }
+}
+
+/* Double extra-large devices (2xl) - >= 1536px */
+@media (min-width: 1536px) {
+    .container {
+        @apply px-16 pt-16 max-w-[1536px];
+    }
+}
+
+.sidebar-interior nav {
+    &::-webkit-scrollbar {
+        width: 0px;
+    }
+}
+
+
+  .invoice-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid black;
+    margin-bottom: 20px;
+  }
+  
+  .invoice-table th,
+  .invoice-table td {
+    padding: 10px;
+    text-align: left;
+  }
+  
+  .invoice-table th {
+    background-color: black;
+    color: white;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  

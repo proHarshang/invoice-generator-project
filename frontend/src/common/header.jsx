@@ -1,16 +1,17 @@
+import { Link } from "react-router-dom"
 
 function header() {
     return (
-        <div className="navbar bg-[#D7D4D4] p-10 py-5 pt-6 items-end flex justify-between">
+        <div className="navbar bg-[#D7D4D4] p-10 py-5 pt-6 items-center flex justify-between">
             <div>
-                <a className="btn btn-ghost text-3xl">LOGO</a>
+                <span className="btn btn-ghost text-3xl">INVOICE GENERATOR</span>
             </div>
             <div className="text-lg flex gap-7 items-center">
-                <a href="/invoice-form">Create</a>
-                <a href="">Settings</a>
-                <a href="">Logout</a>
+                <Link to='/invoice-form' className="active:scale-95 hover:underline transition-all">Create</Link>
+                <Link to='/settings' className="active:scale-95 hover:underline transition-all">Settings</Link>
+                <Link to='/logout' className="active:scale-95 hover:underline transition-all">Logout</Link>
             </div>
-        </div >
+        </div>
     )
 }
 

@@ -1,5 +1,5 @@
 from app import app, db
-from models import Invoice
+from models import Invoice, CompanySettings, User
 
 def create_db():
     # Use the app context to create the tables

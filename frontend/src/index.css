@@ -10,6 +10,10 @@ body {
     }
 }
 
+::-webkit-scrollbar {
+    width: 0px;
+}
+
 /* Base container styles (mobile-first approach) */
 .container {
     @apply w-full max-w-full my-0 mx-auto px-5 py-4;
@@ -77,3 +81,20 @@ body {
     white-space: nowrap;
   }
   
+  .download-button {
+    padding: 5px 10px;
+    font-size: 14px;
+    cursor: pointer;
+    border: 1px solid rgb(0, 0, 0);
+    background-color: rgb(92, 195, 97);
+    color: white;
+  }
+  
+  .delete-button {
+    padding: 5px 10px;
+    font-size: 14px;
+    cursor: pointer;
+    color: white;
+    border: 1px solid rgb(0, 0, 0);
+    background-color: rgb(181, 27, 27);
+  }

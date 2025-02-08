@@ -20,9 +20,9 @@ function App() {
               </PrivateRoute>
             } />
             <Route path="/invoice-table" element={
-              <PrivateRoute>
+              // <PrivateRoute>
                 <InvoiceTable />
-              </PrivateRoute>
+              // </PrivateRoute>
             } />
             <Route path="/logout" element={
               <PrivateRoute>

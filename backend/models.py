@@ -1,6 +1,8 @@
 from app import db
 from sqlalchemy.dialects.postgresql import JSON
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import date
+
 
 class Invoice(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -13,10 +15,10 @@ class Invoice(db.Model):
     taxes = db.Column(db.Integer, nullable=False)
     total = db.Column(db.Integer, nullable=False)
     status = db.Column(db.String(50), nullable=False)
-    due_date = db.Column(db.DateTime, nullable=False)
-    issue_date = db.Column(db.DateTime, default=db.func.current_timestamp())
+    due_date = db.Column(db.Date, nullable=False)  # Changed to db.Date
+    issue_date = db.Column(db.Date, default=date.today)  # Changed to db.Date
     note = db.Column(db.Text, nullable=True)
-
+    
     def __repr__(self):
         return f"<Invoice {self.invoice_number} - {self.customer_name}>"
     

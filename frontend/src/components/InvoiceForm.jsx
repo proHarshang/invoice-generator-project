@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const InvoiceForm = () => {
@@ -20,6 +21,7 @@ const InvoiceForm = () => {
     const [invoice, setInvoice] = useState(defaultInvoice);
     const [loadingSave, setLoadingSave] = useState(false);
     const [loadingGenerate, setLoadingGenerate] = useState(false);
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         setInvoice({ ...invoice, [e.target.name]: e.target.value });
@@ -45,6 +47,7 @@ const InvoiceForm = () => {
             const response = await axios.post(url, invoice);
             console.log("Response:", response);
             alert("Invoice processed successfully!");
+            navigate("/invoice-table");
         } catch (err) {
             console.log("Error:", err);
             alert("Error processing invoice");

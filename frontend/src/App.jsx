@@ -1,5 +1,6 @@
 import InoiceForm from "./pages/InoiceForm";
 import Auth from "./pages/Auth";
+import CompanySetting from "./pages/CompanySetting";
 import InvoiceTable from "./pages/InvoiceTable";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import MainLayout from "./layout/mainLayout";
@@ -20,9 +21,14 @@ function App() {
               </PrivateRoute>
             } />
             <Route path="/invoice-table" element={
-              // <PrivateRoute>
+              <PrivateRoute>
                 <InvoiceTable />
-              // </PrivateRoute>
+              </PrivateRoute>
+            } />
+            <Route path="/settings" element={
+              <PrivateRoute>
+                <CompanySetting />
+              </PrivateRoute>
             } />
             <Route path="/logout" element={
               <PrivateRoute>

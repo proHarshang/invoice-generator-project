@@ -39,44 +39,30 @@ def save_invoice():
     try:
         data = request.get_json()
 
-        # Validate required fields
-        required_fields = ["invoice_number", "customer_name", "customer_email", "items", 
-                           "subtotal", "taxes", "total", "status", "due_date"]
-        
-        missing_fields = [field for field in required_fields if field not in data]
-        if missing_fields:
-            return jsonify({'error': f'Missing fields: {", ".join(missing_fields)}'}), 400
-
-        # Convert date fields properly
-        issue_date_str = data.get("issue_date", None)
-        due_date_str = data.get("due_date", None)
-
-        issue_date = datetime.strptime(issue_date_str, "%Y-%m-%d").date() if issue_date_str else datetime.utcnow().date()
-        due_date = datetime.strptime(due_date_str, "%Y-%m-%d").date() if due_date_str else None  # Allow due_date to be NULL
+        if not data:
+            return jsonify({"error": "No data provided"}), 400
 
         invoice = Invoice(
-            invoice_number=data["invoice_number"],
-            customer_name=data["customer_name"],
-            customer_email=data["customer_email"],
-            items=data["items"],
-            discounts=data.get("discounts", 0),
-            subtotal=data["subtotal"],
-            taxes=data["taxes"],
-            total=data["total"],
-            status=data["status"],
-            due_date=due_date,
-            issue_date=issue_date,
-            note=data.get("note", "")
+            invoice_number=data.get("invoice_number"),
+            customer_name=data.get("customer_name"),
+            customer_email=data.get("customer_email"),
+            subtotal=float(data.get("subtotal", 0)),  # Ensure it's a float
+            total=float(data.get("total", 0)),
+            discounts=float(data.get("discounts", 0)),
+            taxes=float(data.get("taxes", 0)),
+            status=data.get("status"),
+            due_date=datetime.strptime(data.get("due_date"), "%Y-%m-%d") if data.get("due_date") else None,
+            issue_date=datetime.strptime(data.get("issue_date"), "%Y-%m-%d") if data.get("issue_date") else None,
+            note=data.get("note"),
         )
 
         db.session.add(invoice)
         db.session.commit()
 
-        return jsonify({'message': 'Invoice saved successfully', 'invoice_id': invoice.id}), 201
-
+        return jsonify({"message": "Invoice saved successfully", "invoice_id": invoice.id}), 201
     except Exception as e:
         db.session.rollback()
-        return jsonify({'error': 'Failed to save invoice', 'details': str(e)}), 500
+        return jsonify({"error": str(e)}), 500
 @app.route('/save-and-generate-invoice-pdf', methods=['POST'])
 def generate_invoice():
     try:
@@ -129,6 +115,7 @@ def generate_invoice():
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': 'Failed to generate invoice', 'details': str(e)}), 500
+
 @app.route('/generate-invoice-pdf/<int:id>', methods=['GET'])
 def generate_invoice_pdf_by_id(id):
     invoice = Invoice.query.get_or_404(id)

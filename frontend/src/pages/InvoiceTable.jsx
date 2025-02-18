@@ -24,8 +24,6 @@ const InvoiceTable = () => {
         return <p>Loading invoices...</p>;
     }
 
-    console.log("invoices", invoices);
-
     const formatDate = (dateString) => {
         if (!dateString) return "Not Modified Yet";
         const date = new Date(dateString);

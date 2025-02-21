@@ -3,6 +3,9 @@ import { useEffect, useState } from "react";
 const InvoiceTable = () => {
     const [invoices, setInvoices] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [loadingDownload, setLoadingDownload] = useState(null);
+    const [loadingSend, setLoadingSend] = useState(null);
+    const [loadingDelete, setLoadingDelete] = useState(null);
 
     useEffect(() => {
         const fetchInvoices = async () => {
@@ -39,34 +42,53 @@ const InvoiceTable = () => {
     };
 
     const downloadPDF = async (invoiceId) => {
+        setLoadingDownload(invoiceId);
         try {
             const response = await fetch(`${import.meta.env.VITE_BASE_URL}/generate-invoice-pdf/${invoiceId}`);
             const data = await response.json();
+            console.log("data", data);
 
             if (data.pdf) {
                 // ✅ Open the correct relative URL
-                window.open(`${import.meta.env.VITE_BASE_URL}/${data.pdf}`, "_blank");
+                window.open(`${import.meta.env.VITE_BASE_URL}/static/${data.pdf}`, "_blank");
             } else {
                 console.error("Error generating PDF:", data.message);
             }
         } catch (error) {
             console.error("Error downloading invoice:", error);
+        } finally {
+            setLoadingDownload(null);
         }
     };
 
-
-    // Function to generate and send PDF via email
     const generateAndSendPDF = async (invoiceId) => {
+        setLoadingSend(invoiceId);
         try {
             const response = await fetch(`${import.meta.env.VITE_BASE_URL}/generate-and-send-invoice-pdf/${invoiceId}`);
             const data = await response.json();
             alert(data.message); // Show confirmation message
         } catch (error) {
             console.error("Error sending invoice:", error);
+        } finally {
+            setLoadingSend(null);
         }
     };
 
-
+    const deleteInvoice = async (invoiceId) => {
+        setLoadingDelete(invoiceId);
+        try {
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/delete-invoice/${invoiceId}`, {
+                method: 'DELETE',
+            });
+            const data = await response.json();
+            alert(data.message); // Show confirmation message
+            setInvoices(invoices.filter(invoice => invoice.id !== invoiceId));
+        } catch (error) {
+            console.error("Error deleting invoice:", error);
+        } finally {
+            setLoadingDelete(null);
+        }
+    };
 
     return (
         <div className="overflow-scroll">
@@ -94,7 +116,7 @@ const InvoiceTable = () => {
                     </thead>
                     <tbody>
                         {invoices?.map((item, index) => (
-                            <tr key={item._id}>
+                            <tr key={item.id}>
                                 <td>{index + 1}</td>
                                 <td>{item.invoice_number}</td>
                                 <td>{item.customer_name}</td>
@@ -107,25 +129,34 @@ const InvoiceTable = () => {
                                 <td>{item?.status}</td>
                                 <td>{formatDate(item?.issue_date)}</td>
                                 <td>{item?.note}</td>
-                                <td className="flex items-center gap-2 w-full">
-                                    <div className="action-buttons w-1/2">
+                                <td className="flex flex-col items-center w-full">
+                                    <div className="action-buttons flex gap-2 mb-2">
                                         <button
                                             type="button"
                                             className="download-button hover:bg-zinc-300"
                                             onClick={() => downloadPDF(item.id)}
+                                            disabled={loadingDownload === item.id}
                                         >
-                                            Download
+                                            {loadingDownload === item.id ? "Downloading..." : "Download"}
                                         </button>
                                         <button
                                             type="button"
-                                            className="download-button hover:bg-zinc-300"
-                                            onClick={() => generateAndSendPDF(item.id)}
+                                            className="delete-button hover:bg-zinc-300"
+                                            onClick={() => deleteInvoice(item.id)}
+                                            disabled={loadingDelete === item.id}
                                         >
-                                            Download and Send
+                                            {loadingDelete === item.id ? "Deleting..." : "Delete"}
                                         </button>
                                     </div>
-                                    <div className="action-buttons w-1/2">
-                                        <button type="button" className="delete-button hover:bg-zinc-300">Delete</button>
+                                    <div className="action-buttons">
+                                        <button
+                                            type="button"
+                                            className="download-send-button hover:bg-zinc-300 text-nowrap"
+                                            onClick={() => generateAndSendPDF(item.id)}
+                                            disabled={loadingSend === item.id}
+                                        >
+                                            {loadingSend === item.id ? "Sending..." : "Download and Send"}
+                                        </button>
                                     </div>
                                 </td>
                             </tr>

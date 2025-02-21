@@ -5,7 +5,8 @@ from email.mime.base import MIMEBase
 from email import encoders
 import os
 
-def send_email(to_email, subject, body, attachment_path):
+
+def send_email(to_email, subject, body, attachment_filename):
     from_email = "harshangthakaraestin@gmail.com"
     from_password = "tulkcvtywjeqwecx"
 
@@ -18,22 +19,24 @@ def send_email(to_email, subject, body, attachment_path):
     # Attach the body with the msg instance
     msg.attach(MIMEText(body, 'plain'))
 
+    # Define the path to the attachment
+    attachment_path = os.path.join("static", attachment_filename)
+
     # Open the file to be sent
-    attachment = open(attachment_path, "rb")
+    with open(attachment_path, "rb") as attachment:
+        # Instance of MIMEBase and named as p
+        part = MIMEBase('application', 'octet-stream')
 
-    # Instance of MIMEBase and named as p
-    part = MIMEBase('application', 'octet-stream')
+        # To change the payload into encoded form
+        part.set_payload(attachment.read())
 
-    # To change the payload into encoded form
-    part.set_payload((attachment).read())
+        # Encode into base64
+        encoders.encode_base64(part)
 
-    # Encode into base64
-    encoders.encode_base64(part)
+        part.add_header('Content-Disposition', f"attachment; filename= {os.path.basename(attachment_path)}")
 
-    part.add_header('Content-Disposition', f"attachment; filename= {os.path.basename(attachment_path)}")
-
-    # Attach the instance 'part' to instance 'msg'
-    msg.attach(part)
+        # Attach the instance 'part' to instance 'msg'
+        msg.attach(part)
 
     # Create SMTP session for sending the mail
     server = smtplib.SMTP('smtp.gmail.com', 587)

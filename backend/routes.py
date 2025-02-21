@@ -5,6 +5,7 @@ from pdf_generator import generate_invoice_pdf
 from email_sender import send_email
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
+import os
 
 @app.route('/register', methods=['POST'])
 def register():
@@ -38,6 +39,7 @@ def login():
 def save_invoice():
     try:
         data = request.get_json()
+        app.logger.info(f"Received data: {data}")
 
         if not data:
             return jsonify({"error": "No data provided"}), 400
@@ -46,6 +48,7 @@ def save_invoice():
             invoice_number=data.get("invoice_number"),
             customer_name=data.get("customer_name"),
             customer_email=data.get("customer_email"),
+            items=data.get("items"),  # Ensure items are included
             subtotal=float(data.get("subtotal", 0)),  # Ensure it's a float
             total=float(data.get("total", 0)),
             discounts=float(data.get("discounts", 0)),
@@ -62,7 +65,9 @@ def save_invoice():
         return jsonify({"message": "Invoice saved successfully", "invoice_id": invoice.id}), 201
     except Exception as e:
         db.session.rollback()
+        app.logger.error(f"Error saving invoice: {e}")
         return jsonify({"error": str(e)}), 500
+    
 @app.route('/save-and-generate-invoice-pdf', methods=['POST'])
 def generate_invoice():
     try:
@@ -202,7 +207,6 @@ def drop_invoice_table():
         return jsonify({'message': 'Failed to drop invoice table', 'error': str(e)}), 500
 
 # Company Settings Endpoints
-
 @app.route('/company-settings', methods=['GET'])
 def get_company_settings():
     settings = CompanySettings.query.first()
@@ -237,18 +241,33 @@ def create_company_settings():
 
 @app.route('/company-settings', methods=['PUT'])
 def update_company_settings():
-    data = request.json
+    data = request.form
     settings = CompanySettings.query.first()
     if not settings:
         return jsonify({'message': 'No company settings found'}), 404
 
-    settings.company_logo = data.get('company_logo', settings.company_logo)
-    settings.company_name = data['company_name']
-    settings.company_address = data['company_address']
-    settings.contact_number = data['contact_number']
-    settings.contact_email = data['contact_email']
+    settings.company_name = data.get('company_name', settings.company_name)
+    settings.company_address = data.get('company_address', settings.company_address)
+    settings.contact_number = data.get('contact_number', settings.contact_number)
+    settings.contact_email = data.get('contact_email', settings.contact_email)
     settings.company_website = data.get('company_website', settings.company_website)
-    settings.tax_identification_number = data['tax_identification_number']
+    settings.tax_identification_number = data.get('tax_identification_number', settings.tax_identification_number)
+
+    if 'company_logo' in request.files:
+        logo = request.files['company_logo']
+        logo_filename = f"company_logo_{settings.id}.png"
+        logo_path = os.path.join('static', logo_filename)
+        logo.save(logo_path)
+        settings.company_logo = logo_filename
 
     db.session.commit()
-    return jsonify({'message': 'Company settings updated'})
+    return jsonify({
+        'message': 'Company settings updated',
+        'company_logo': settings.company_logo,
+        'company_name': settings.company_name,
+        'company_address': settings.company_address,
+        'contact_number': settings.contact_number,
+        'contact_email': settings.contact_email,
+        'company_website': settings.company_website,
+        'tax_identification_number': settings.tax_identification_number
+    })

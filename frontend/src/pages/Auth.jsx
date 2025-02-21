@@ -27,7 +27,6 @@ const Auth = () => {
             <div className="flex flex-col gap-10 items-center">
                 <div className="text-3xl bg-[#D7D4D4] w-fit px-10 py-4">INVOICE GENERATOR</div>
                 <form onSubmit={handleLogin} className="bg-[#D7D4D4] p-10 w-[35%] flex justify-center flex-col gap-5 items-center">
-                    {error && <div className="text-red-500">{error}</div>}
                     <div className="bg-white p-3 w-full">
                         <label className="input input-bordered flex items-center gap-2">
                             <svg
@@ -71,6 +70,7 @@ const Auth = () => {
                             />
                         </label>
                     </div>
+                    {error && <div className="text-red-500">{error}</div>}
 
                     <button type="submit" className="bg-white px-10 py-3 w-fit mt-5">Submit</button>
                 </form>

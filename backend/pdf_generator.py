@@ -6,17 +6,13 @@ from reportlab.lib import colors
 from reportlab.platypus import Table, TableStyle
 from models import CompanySettings
 
-
 def generate_invoice_pdf(invoice):
     # Define save path inside "static"
-    base_dir = os.path.dirname(os.path.abspath(__file__))
-    pdf_dir = os.path.join(base_dir, "static")
-
-    os.makedirs(pdf_dir, exist_ok=True)  # Ensure folder exists
-
-    # Save path
+    pdf_dir = "static"
     pdf_filename = f"invoice_{invoice.id}.pdf"
     pdf_path = os.path.join(pdf_dir, pdf_filename)
+
+    os.makedirs(pdf_dir, exist_ok=True)  # Ensure folder exists
 
     # Generate PDF
     c = canvas.Canvas(pdf_path, pagesize=letter)
@@ -27,18 +23,20 @@ def generate_invoice_pdf(invoice):
 
     # Draw company logo (if available)
     if company_settings and company_settings.company_logo:
-        logo_path = os.path.join(base_dir, "static", company_settings.company_logo)
+        logo_path = os.path.join(pdf_dir, company_settings.company_logo)
         if os.path.exists(logo_path):
             logo = ImageReader(logo_path)
             c.drawImage(logo, 40, height - 100, width=120, height=60, preserveAspectRatio=True, mask='auto')
 
     # Company Details
-    c.setFont("Helvetica-Bold", 14)
-    c.drawString(180, height - 50, company_settings.company_name or "Your Company Name")
-    c.setFont("Helvetica", 10)
-    c.drawString(180, height - 65, company_settings.company_address or "Company Address")
-    c.drawString(180, height - 80, f"Website: {company_settings.company_website or 'N/A'}")
-    c.drawString(180, height - 95, f"Email: {company_settings.contact_email or 'N/A'}")
+    if company_settings:
+        c.setFont("Helvetica-Bold", 14)
+        c.drawString(180, height - 50, company_settings.company_name or "Your Company Name")
+        c.setFont("Helvetica", 10)
+        c.drawString(180, height - 65, company_settings.company_address or "Company Address")
+        c.drawString(180, height - 80, f"Website: {company_settings.company_website or 'N/A'}")
+        c.drawString(180, height - 95, f"Email: {company_settings.contact_email or 'N/A'}")
+        c.drawString(180, height - 110, f"Contact: {company_settings.contact_number or 'N/A'}")
 
     # Invoice Title
     c.setFont("Helvetica-Bold", 16)
@@ -101,4 +99,4 @@ def generate_invoice_pdf(invoice):
     # Save PDF
     c.save()
 
-    return pdf_path  # Return the saved PDF path
+    return pdf_filename  # Return the relative path to the saved PDF

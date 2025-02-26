@@ -1,16 +1,15 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
-from routes import *
 
 # Initialize Flask app and database
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///invoices.db'  # SQLite database URI
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///invoices.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-# Enable CORS with necessary headers
+# Enable CORS
 CORS(app, supports_credentials=True, origins=[
     "https://invoice-generator-project-eiwn.onrender.com",
     "https://invoice-generator-project-server.onrender.com",
@@ -18,20 +17,22 @@ CORS(app, supports_credentials=True, origins=[
 ])
 
 # Handle preflight requests
-@app.after_request
-def add_cors_headers(response):
-    response.headers["Access-Control-Allow-Origin"] = request.headers.get("Origin", "*")
-    response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
-    response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE"
-    return response
+@app.before_request
+def handle_preflight():
+    if request.method == "OPTIONS":
+        response = jsonify({"message": "CORS preflight successful"})
+        response.headers.add("Access-Control-Allow-Origin", request.headers.get("Origin", "*"))
+        response.headers.add("Access-Control-Allow-Headers", "Content-Type, Authorization")
+        response.headers.add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+        return response, 204  # No content response for OPTIONS
 
 # Sample route
 @app.route("/")
 def home():
     return jsonify({"message": "Hello from Flask!"})
 
-# Import routes after initializing db to avoid circular imports
+# Import routes AFTER initializing db
 from routes import *
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0", port=8000)

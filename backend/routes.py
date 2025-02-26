@@ -7,8 +7,11 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 import os
 
-@app.route('/register', methods=['POST'])
+@app.route('/register', methods=['POST', 'OPTIONS'])  # Add OPTIONS method
 def register():
+    if request.method == "OPTIONS":
+        return '', 204  # Respond to preflight with no content
+
     data = request.json
     email = data['email']
     password = data['password']
@@ -23,8 +26,11 @@ def register():
 
     return jsonify({'message': 'User registered successfully'})
 
-@app.route('/login', methods=['POST'])
+@app.route('/login', methods=['POST', 'OPTIONS'])  # Add OPTIONS method
 def login():
+    if request.method == "OPTIONS":
+        return '', 204  # Respond to preflight with no content
+
     data = request.json
     email = data.get('email')
     password = data.get('password')
@@ -34,7 +40,6 @@ def login():
         return jsonify({'message': 'Invalid email or password'}), 401
 
     return jsonify({'message': 'Login successful'})
-
 @app.route('/save-invoice', methods=['POST'])
 def save_invoice():
     try:

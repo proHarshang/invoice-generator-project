@@ -1,5 +1,5 @@
 from flask import Flask
-from flask_asgi import ASGIApp  # Converts Flask (WSGI) to ASGI
+from flask_asgi import ASGIApp  # Converts Flask to ASGI
 
 app = Flask(__name__)
 

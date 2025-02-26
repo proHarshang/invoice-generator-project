@@ -28,9 +28,14 @@ def register():
 
 @app.route('/login', methods=['POST', 'OPTIONS'])  # Add OPTIONS method
 def login():
-    if request.method == "OPTIONS":
-        return '', 204  # Respond to preflight with no content
+    if request.method == "OPTIONS":  
+        response = jsonify({"message": "CORS preflight successful"})
+        response.headers.add("Access-Control-Allow-Origin", request.headers.get("Origin", "*"))
+        response.headers.add("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+        response.headers.add("Access-Control-Allow-Headers", "Content-Type, Authorization")
+        return response, 204  # Return 204 No Content for preflight request
 
+    # Handle actual login request (POST method)
     data = request.json
     email = data.get('email')
     password = data.get('password')
@@ -40,6 +45,7 @@ def login():
         return jsonify({'message': 'Invalid email or password'}), 401
 
     return jsonify({'message': 'Login successful'})
+
 @app.route('/save-invoice', methods=['POST'])
 def save_invoice():
     try:

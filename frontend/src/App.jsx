@@ -6,13 +6,13 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import PrivateRoute from "./components/PrivateRoute";
 import { AuthProvider } from "./context/AuthContext";
 import Logout from "./components/Logout";
-import MainLayout from "./layout/mainLayout";
+// import MainLayout from "./layout/mainLayout";
 
 function App() {
   return (
     <AuthProvider>
       <Router>
-        <MainLayout>
+        {/* <MainLayout> */}
           <Routes>
             <Route path="/" element={<Auth />} />
             <Route path="/invoice-form" element={
@@ -36,7 +36,7 @@ function App() {
               </PrivateRoute>
             } />
           </Routes>
-        </MainLayout>
+        {/* </MainLayout> */}
       </Router>
     </AuthProvider>
   );

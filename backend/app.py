@@ -9,7 +9,6 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-# CORS(app)
 # Enable CORS for the entire app
 CORS(app, resources={r"/*": {"origins": [
     "*",

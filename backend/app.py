@@ -9,14 +9,12 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
+# CORS(app)
 # Enable CORS for the entire app
-# Enable CORS for the entire app
-CORS(app)
 CORS(app, resources={r"/*": {"origins": [
     "*",
-    "https://invoice-generator-project-eiwn.onrender.com/",
     "https://invoice-generator-project-eiwn.onrender.com",
-    "https://invoice-generator-project-server.onrender.com/",
+    "https://invoice-generator-project-server.onrender.com",
     "http://localhost:3000"
 ]}})
 

@@ -31,7 +31,7 @@ def home():
     return jsonify({"message": "Hello from Flask!"})
 
 # Explicitly handle OPTIONS requests
-@app.route('/<path:path>', methods=['OPTIONS'])
+@app.route('/<path:path>', methods=['post'])
 def handle_options(path):
     return '', 204  # No Content
 

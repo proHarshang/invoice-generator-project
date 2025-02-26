@@ -26,16 +26,15 @@ def register():
 
     return jsonify({'message': 'User registered successfully'})
 
-@app.route('/login', methods=['POST', 'OPTIONS'])  # Add OPTIONS method
+@app.route('/login', methods=['POST', 'OPTIONS'])
 def login():
-    if request.method == "OPTIONS":  
-        response = jsonify({"message": "CORS preflight successful"})
-        response.headers.add("Access-Control-Allow-Origin", request.headers.get("Origin", "*"))
-        response.headers.add("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+    if request.method == 'OPTIONS':
+        response = jsonify({'message': 'CORS Preflight OK'})
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        response.headers.add("Access-Control-Allow-Methods", "POST, OPTIONS")
         response.headers.add("Access-Control-Allow-Headers", "Content-Type, Authorization")
-        return response, 204  # Return 204 No Content for preflight request
+        return response, 200
 
-    # Handle actual login request (POST method)
     data = request.json
     email = data.get('email')
     password = data.get('password')

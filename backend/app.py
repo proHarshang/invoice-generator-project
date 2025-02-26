@@ -11,7 +11,7 @@ db = SQLAlchemy(app)
 
 # Enable CORS for the entire app
 CORS(app)
-# CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
+CORS(app, resources={r"/*": {"origins": "https://invoice-generator-project-server.onrender.com"}})
 
 
 # Import routes after initializing db to avoid circular imports

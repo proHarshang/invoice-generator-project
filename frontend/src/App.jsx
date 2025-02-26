@@ -3,10 +3,10 @@ import Auth from "./pages/Auth";
 import CompanySetting from "./pages/CompanySetting";
 import InvoiceTable from "./pages/InvoiceTable";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import MainLayout from "./layout/mainLayout";
 import PrivateRoute from "./components/PrivateRoute";
 import { AuthProvider } from "./context/AuthContext";
 import Logout from "./components/Logout";
+import MainLayout from "./layout/mainLayout";
 
 function App() {
   return (

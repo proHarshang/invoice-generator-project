@@ -23,18 +23,20 @@ def register():
 
     return jsonify({'message': 'User registered successfully'})
 
-@app.route('/login', methods=['POST'])
+@app.route('/login', methods=['POST', 'OPTIONS'])  # Add OPTIONS method
 def login():
+    if request.method == "OPTIONS":  # Handle preflight requests explicitly
+        return '', 204
+
     data = request.json
-    email = data['email']
-    password = data['password']
+    email = data.get('email')
+    password = data.get('password')
 
     user = User.query.filter_by(email=email).first()
     if user is None or not user.check_password(password):
         return jsonify({'message': 'Invalid email or password'}), 401
 
     return jsonify({'message': 'Login successful'})
-
 
 @app.route('/save-invoice', methods=['POST'])
 def save_invoice():

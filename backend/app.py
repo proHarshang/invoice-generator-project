@@ -9,21 +9,18 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-# Enable CORS
-CORS(app, supports_credentials=True, origins=[
-    "https://invoice-generator-project-eiwn.onrender.com",
-    "https://invoice-generator-project-server.onrender.com",
-    "http://localhost:3000"
-])
+# Enable CORS globally
+CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 
-# Handle preflight requests
+# Handle preflight requests globally
 @app.before_request
 def handle_preflight():
     if request.method == "OPTIONS":
         response = jsonify({"message": "CORS preflight successful"})
         response.headers.add("Access-Control-Allow-Origin", request.headers.get("Origin", "*"))
-        response.headers.add("Access-Control-Allow-Headers", "Content-Type, Authorization")
         response.headers.add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+        response.headers.add("Access-Control-Allow-Headers", "Content-Type, Authorization")
+        response.headers.add("Access-Control-Allow-Credentials", "true")
         return response, 204  # No content response for OPTIONS
 
 # Sample route

@@ -1,6 +1,6 @@
-from flask import Flask
+from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
-from flask_cors import CORS 
+from flask_cors import CORS
 from routes import *
 
 # Initialize Flask app and database
@@ -30,12 +30,8 @@ def add_cors_headers(response):
 def home():
     return jsonify({"message": "Hello from Flask!"})
 
-# Explicitly handle OPTIONS requests
-@app.route('/<path:path>', methods=['post'])
-def handle_options(path):
-    return '', 204  # No Content
-
 # Import routes after initializing db to avoid circular imports
+from routes import *
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -23,11 +23,8 @@ def register():
 
     return jsonify({'message': 'User registered successfully'})
 
-@app.route('/login', methods=['POST', 'OPTIONS'])  # Add OPTIONS method
+@app.route('/login', methods=['POST'])
 def login():
-    if request.method == "OPTIONS":  # Handle preflight requests explicitly
-        return '', 204
-
     data = request.json
     email = data.get('email')
     password = data.get('password')
@@ -70,7 +67,7 @@ def save_invoice():
         db.session.rollback()
         app.logger.error(f"Error saving invoice: {e}")
         return jsonify({"error": str(e)}), 500
-    
+
 @app.route('/save-and-generate-invoice-pdf', methods=['POST'])
 def generate_invoice():
     try:
@@ -134,12 +131,12 @@ def generate_invoice_pdf_by_id(id):
 def generate_and_send_invoice_pdf(id):
     invoice = Invoice.query.get_or_404(id)
     pdf_filename = generate_invoice_pdf(invoice)
-    
+
     # Send the PDF to the customer's email
     subject = f"Invoice {invoice.invoice_number}"
     body = f"Dear {invoice.customer_name},\n\nPlease find attached your invoice.\n\nThank you."
     send_email(invoice.customer_email, subject, body, pdf_filename)
-    
+
     return jsonify({'message': 'Invoice PDF generated and sent to customer', 'pdf': pdf_filename})
 
 @app.route('/invoices', methods=['GET'])
@@ -160,7 +157,7 @@ def get_invoices():
         'issue_date': invoice.issue_date,
         'note': invoice.note
     } for invoice in invoices])
-    
+
 @app.route('/update-invoice/<int:id>', methods=['PUT'])
 def update_invoice(id):
     data = request.json

@@ -23,8 +23,11 @@ def register():
 
     return jsonify({'message': 'User registered successfully'})
 
-@app.route('/login', methods=['POST'])
+@app.route('/login', methods=['POST', 'OPTIONS'])
 def login():
+    if request.method == 'OPTIONS':
+        return jsonify({'status': 'ok'}), 200
+
     data = request.json
     email = data['email']
     password = data['password']
@@ -34,6 +37,7 @@ def login():
         return jsonify({'message': 'Invalid email or password'}), 401
 
     return jsonify({'message': 'Login successful'})
+
 
 @app.route('/save-invoice', methods=['POST'])
 def save_invoice():

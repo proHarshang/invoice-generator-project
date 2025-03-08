@@ -34,9 +34,9 @@ def generate_invoice_pdf(invoice):
         c.drawString(180, height - 50, company_settings.company_name or "Your Company Name")
         c.setFont("Helvetica", 10)
         c.drawString(180, height - 65, company_settings.company_address or "Company Address")
-        c.drawString(180, height - 80, f"Website: {company_settings.company_website or 'N/A'}")
-        c.drawString(180, height - 95, f"Email: {company_settings.contact_email or 'N/A'}")
-        c.drawString(180, height - 110, f"Contact: {company_settings.contact_number or 'N/A'}")
+        c.drawString(180, height - 80, f"{company_settings.company_website or 'N/A'}")
+        c.drawString(180, height - 95, f"{company_settings.contact_email or 'N/A'}")
+        c.drawString(180, height - 110, f"{company_settings.contact_number or 'N/A'}")
 
     # Invoice Title
     c.setFont("Helvetica-Bold", 16)
@@ -88,13 +88,13 @@ def generate_invoice_pdf(invoice):
 
     # Draw Table
     table.wrapOn(c, width, height)
-    table.drawOn(c, 40, height - 300)
+    table.drawOn(c, 40, height - 340)
 
     # Notes Section
     c.setFont("Helvetica", 10)
-    c.drawString(40, height - 350, "Note:")
-    c.setFont("Helvetica-Oblique", 10)
-    c.drawString(80, height - 350, invoice.note or "No additional notes.")
+    c.drawString(40, height - 370, "Note:")
+    c.setFont("Helvetica", 10)
+    c.drawString(80, height - 370, invoice.note or "No additional notes.")
 
     # Save PDF
     c.save()

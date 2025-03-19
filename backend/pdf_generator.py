@@ -63,16 +63,16 @@ def generate_invoice_pdf(invoice):
         table_data.append([
             index,  # Serial number
             item["unit_name"],  # Description
-            f"${item['unit_cost']}",  # Unit Price
+            f"Rs {item['unit_cost']}",  # Unit Price
             item["qty"],  # QTY moved after Unit Price
-            f"${item['total']}"  # Total
+            f"Rs {item['total']}"  # Total
         ])
 
     # Add subtotal, tax, discount, total
-    table_data.append(["", "", "", "Subtotal:", f"${invoice.subtotal}"])
-    table_data.append(["", "", "", "Taxes:", f"${invoice.taxes}"])
-    table_data.append(["", "", "", "Discounts:", f"-${invoice.discounts}"])
-    table_data.append(["", "", "", "Grand Total:", f"${invoice.total}"])
+    table_data.append(["", "", "", "Subtotal:", f"Rs {invoice.subtotal}"])
+    table_data.append(["", "", "", "Taxes:", f"Rs {invoice.taxes}"])
+    table_data.append(["", "", "", "Discounts:", f"Rs -{invoice.discounts}"])
+    table_data.append(["", "", "", "Grand Total:", f"Rs {invoice.total}"])
 
     # Create Table
     table = Table(table_data, colWidths=[40, 230, 80, 60, 100])
@@ -88,13 +88,13 @@ def generate_invoice_pdf(invoice):
 
     # Draw Table
     table.wrapOn(c, width, height)
-    table.drawOn(c, 40, height - 340)
+    table.drawOn(c, 40, height - 440)
 
     # Notes Section
     c.setFont("Helvetica", 10)
-    c.drawString(40, height - 370, "Note:")
+    c.drawString(40, height - 470, "Note:")
     c.setFont("Helvetica", 10)
-    c.drawString(80, height - 370, invoice.note or "No additional notes.")
+    c.drawString(80, height - 470, invoice.note or "No additional notes.")
 
     # Save PDF
     c.save()

@@ -7,7 +7,7 @@ import os
 
 
 def send_email(to_email, subject, body, attachment_filename):
-    from_email = "harshangthakaraestin@gmail.com"
+    from_email = "abcd@gmail.com"
     from_password = "tulkcvtywjeqwecx"
 
     # Create the email

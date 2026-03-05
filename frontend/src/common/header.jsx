@@ -1,19 +1,50 @@
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
 
-function header() {
-    return (
-        <div className="navbar bg-[#D7D4D4] p-10 py-5 pt-6 items-center flex justify-between">
-            <div>
-                <span className="btn btn-ghost text-3xl">INVOICE GENERATOR</span>
-            </div>
-            <div className="text-lg flex gap-7 items-center">
-                <Link to='/invoice-table' className="active:scale-95 hover:underline transition-all">Table</Link>
-                <Link to='/invoice-form' className="active:scale-95 hover:underline transition-all">Create</Link>
-                <Link to='/settings' className="active:scale-95 hover:underline transition-all">Settings</Link>
-                <Link to='/logout' className="active:scale-95 hover:underline transition-all">Logout</Link>
-            </div>
-        </div>
-    )
+function Header() {
+  return (
+    <div className="w-full bg-white/80 backdrop-blur-md shadow-md px-10 py-4 flex items-center justify-between border-b">
+      
+      {/* Logo */}
+      <div>
+        <span className="text-2xl font-bold tracking-wide text-gray-800">
+          INVOICE GENERATOR
+        </span>
+      </div>
+
+      {/* Navigation */}
+      <div className="flex items-center gap-8 text-gray-700 font-medium">
+        
+        <Link
+          to="/invoice-table"
+          className="hover:text-black hover:underline transition-all active:scale-95"
+        >
+          Table
+        </Link>
+
+        <Link
+          to="/invoice-form"
+          className="hover:text-black hover:underline transition-all active:scale-95"
+        >
+          Create
+        </Link>
+
+        <Link
+          to="/settings"
+          className="hover:text-black hover:underline transition-all active:scale-95"
+        >
+          Settings
+        </Link>
+
+        <Link
+          to="/logout"
+          className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-all active:scale-95"
+        >
+          Logout
+        </Link>
+
+      </div>
+    </div>
+  );
 }
 
-export default header
+export default Header;
